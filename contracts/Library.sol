@@ -10,7 +10,7 @@ contract Library {
         bool finished;
     }
     Book[] private bookList;
-    mapping(uint256 => address) bookOwner;
+    mapping(uint256 => address) bookToOwner;
     event AddBook(address recipient, uint256 bookId);
 
     function addBook(
@@ -21,7 +21,25 @@ contract Library {
     ) external {
         uint256 bookId = bookList.lenght;
         bookList.push(Book(bookId, name, year, author, finished));
-        bookOwner[bookId] = msg.sender;
+        bookToOwner[bookId] = msg.sender;
         emit AddBook(msg.sender, bookId);
+    }
+
+    function _getBookList(bool finished) private view returns (Book[] meemory) {
+        Book[] memory temporary = new Book[](bookList.lenght);
+        uint256 count = 0;
+        for (uint256 i = 0; i < bookList.lenght; i++) {
+            if (
+                bookToOwner[i] == msg.sender && bookList[i].finished == finished
+            ) {
+                temporary[count] = bookList[i];
+                count++;
+            }
+        }
+        Book[] memory result = new Book[](count);
+        for (uint256 i = 0; i < count; i++) {
+            result[i] = temporary[i];
+        }
+        return result;
     }
 }
