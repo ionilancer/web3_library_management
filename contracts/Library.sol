@@ -12,6 +12,7 @@ contract Library {
     Book[] private bookList;
     mapping(uint256 => address) bookToOwner;
     event AddBook(address recipient, uint256 bookId);
+    event SetFinished(uint256 bookId, bool finished);
 
     function addBook(
         string memory name,
@@ -41,5 +42,20 @@ contract Library {
             result[i] = temporary[i];
         }
         return result;
+    }
+
+    function getFinishedBooks() external view returns (Book[] memory) {
+        return _getBookList(true);
+    }
+
+    function getUnFinishedBooks() external view returns (Book[] memory) {
+        return _getBookList(false);
+    }
+
+    function setFinished(uint256 bookId, bool finished) external {
+        if (bookToOwner[bookId] == msg.sender) {
+            bookList[bookId].finished = true;
+            emit SetFinished(bookId, finished);
+        }
     }
 }
