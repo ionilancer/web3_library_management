@@ -5,6 +5,7 @@ import { ethers } from "ethers";
 import library from "../abi/Library.json";
 
 import { NextPage } from "next";
+import Book from "./components/Book";
 
 declare let window: any;
 
@@ -14,7 +15,8 @@ const Home: NextPage = () => {
   const [bookAuthor, setBookAuthor] = useState("");
   const [bookYear, setBookYear] = useState("");
   const [bookFinished, setBookFinished] = useState("no");
-
+  const [booksFinished, setBooksFinished] = useState([]);
+  const [booksUnFinished, setBooksUnFinished] = useState([]);
   const connectWallet = async () => {
     try {
       const { ethereum } = window;
@@ -66,6 +68,29 @@ const Home: NextPage = () => {
       }
     } catch (error) {
       console.log("Error submiting new book", error);
+    }
+  };
+  const getBooks = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const libraryContract = new ethers.Contract(
+          contractAddress,
+          library.abi,
+          signer
+        );
+        let booksFinished = await libraryContract.getFinishedBooks();
+        let booksUnFinished = await libraryContract.getUnFinishedBooks();
+
+        setBookFinished(booksFinished);
+        setBooksUnFinished(booksUnFinished);
+      } else {
+        console.log("Ethereum object down not exist");
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -127,6 +152,39 @@ const Home: NextPage = () => {
             >
               Add Book
             </button>
+          </div>
+          <div>
+            <div className="flex flex-col justify-center items-center">
+              <div className="font-semibold text-lg text-center mb-4">
+                Books List
+              </div>
+              <button className="text-xl font-bold py-3 px-12 bg-[#f1c232] rounded-lg mb-10 hover:scale-105 transition duration-500 ease-in-out"
+              onClick={getBooks}>
+                Get Books
+              </button>
+              {booksUnFinished.length > 0 ? (
+                <div className="font-semibold text-lg text-center mb-4 mt-5">
+                  Books Unfinished ({booksUnFinished.length})
+                </div>
+              ) : (
+                <div></div>
+              )}
+              <div className="flex flex-row justify-center items-center">
+                {
+                  booksUnFinished.map((book)=>(
+                    <Book
+                    key ={book.id}
+                    id={book.id}
+                    name={book.name}
+                    year={book.year.toString()}
+                    author = {book.author}
+                    finished = {book.finished.toString()}
+                    clickBookFinished = {null}
+                   />
+                  ))
+                }
+              </div>
+            </div>
           </div>
         </div>
       )}
