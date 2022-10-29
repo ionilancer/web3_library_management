@@ -84,7 +84,8 @@ const Home: NextPage = () => {
         let booksFinished = await libraryContract.getFinishedBooks();
         let booksUnFinished = await libraryContract.getUnFinishedBooks();
 
-        setBookFinished(booksFinished);
+        console.log(booksFinished, booksUnFinished);
+        setBooksFinished(booksFinished);
         setBooksUnFinished(booksUnFinished);
       } else {
         console.log("Ethereum object down not exist");
@@ -94,7 +95,7 @@ const Home: NextPage = () => {
     }
   };
 
-  const clickBookFinished = async (id)=>{
+  const clickBookFinished = async (id) => {
     try {
       const { ethereum } = window;
       if (ethereum) {
@@ -105,15 +106,15 @@ const Home: NextPage = () => {
           library.abi,
           signer
         );
-        let libraryTx = await libraryContract.setFinished(id,true);
+        let libraryTx = await libraryContract.setFinished(id, true);
         console.log(libraryTx);
       } else {
         console.log("Ethereum object down not exist");
       }
     } catch (error) {
-      console.log("Error change book Status", error)
+      console.log("Error change book Status", error);
     }
-  }
+  };
   return (
     <div className="flex flex-col items-center bg-[#f3f6f4] text-[#6a50aa] min-h-screen pb-20">
       <div className="transition hover:rotate-180 hover:scale-106 transition duration-500 ease-in-out"></div>
@@ -212,7 +213,7 @@ const Home: NextPage = () => {
               ) : (
                 <div></div>
               )}
-                         <div className="flex flex-row justify-center items-center">
+              <div className="flex flex-row justify-center items-center">
                 {booksFinished.map((book) => (
                   <Book
                     key={book.id}
