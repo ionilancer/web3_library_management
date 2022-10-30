@@ -83,8 +83,6 @@ const Home: NextPage = () => {
         );
         let booksFinished = await libraryContract.getFinishedBooks();
         let booksUnFinished = await libraryContract.getUnFinishedBooks();
-
-        console.log(booksFinished, booksUnFinished);
         setBooksFinished(booksFinished);
         setBooksUnFinished(booksUnFinished);
       } else {
