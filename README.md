@@ -1,13 +1,11 @@
-# Sample Hardhat Project
+# Book manager Dapp
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+Project to manage finished/unfinished books using React Js and a smart contract deployed on the blockchain.
 
-Try running some of the following tasks:
+Instalación:
+
+Descarga de proyecto
 
 ```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+https://github.com/ionilancer/web3_library_management.git
 ```
